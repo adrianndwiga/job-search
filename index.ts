@@ -1,8 +1,23 @@
 import * as https from 'https'
 import * as cheerio from 'cheerio'
-import { readFileSync } from 'fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readFile, writeFile } from 'fs'
 
 const config = JSON.parse(readFileSync('config.json', 'utf8'))
+
+interface JobSearchSetting {
+    url: string,
+    title: string,
+    baseUrl: string,
+    cookie: string,
+    result: string,
+    detail: {
+        title: string,
+        company: string,
+        salary: string,
+        location: string,
+        link: string
+    }
+}
 
 interface Job {
     title: string
@@ -10,6 +25,11 @@ interface Job {
     salary: string
     location: string
     link: string
+}
+
+interface Jobs {
+    jobSearch: JobSearchSetting
+    jobs: Job[]
 }
 
 function request(url: string, cookie: string = ''): Promise<string> {
@@ -28,8 +48,6 @@ function request(url: string, cookie: string = ''): Promise<string> {
             console.log('error retrieving request')
             reject(`Error: ${err.message}`)
         })
-
-        // req.setHeader('cookie', cookie)
     })
 }
 
@@ -65,8 +83,10 @@ function loadJobs(data: string, config: {
     return jobs
 }
 
-async function loadPage(d: {
+async function loadPage(jobSearch: {
     url: string,
+    title: string,
+    baseUrl: string,
     cookie: string,
     result: string,
     detail: {
@@ -77,10 +97,39 @@ async function loadPage(d: {
         link: string
     }
 }) {
-    const response = await request(d.url, d.cookie)
-    const jobs = loadJobs(response, d)
-    console.log(jobs)
+
+    const current = new Date()
+    const folder = `../_store/job-search/${current.getFullYear()}-${current.getMonth() + 1}-${current.getDate()}`
+
+    if(!existsSync(folder))
+        mkdirSync(folder)
+    const downloadedFile = `${jobSearch.title}`;
+    if (!existsSync(`${folder}/${downloadedFile}.json`)) {
+        const response = await request(jobSearch.url, jobSearch.cookie)
+        const jobs = loadJobs(response, jobSearch)
+        const js: Jobs = {jobSearch, jobs }
+        const filePath = `${folder}/${downloadedFile}.json`
+        writeFileSync(filePath, JSON.stringify(js, null, 4), 'utf8')
+        await addMessageToQueue(filePath)
+    }
 }
 
-for(let c in config)
-    loadPage(config[c])
+async function addMessageToQueue(filePath: string): Promise<void> {
+    const jobQueue = `../_queues/jobs-queue.json`
+    
+    return new Promise<void>((resolve, reject) => {
+        readFile(jobQueue, 'utf8', (err, data) => {
+            const queue = JSON.parse(data).concat(filePath)
+            writeFile(jobQueue, JSON.stringify(queue, null, 4), 'utf8', (err) => {
+                if (err) 
+                    reject(err)
+                resolve()
+            })
+        })
+    })
+}
+
+(async () => {
+    for(let c in config)
+      await loadPage(config[c])
+})();
