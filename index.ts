@@ -1,7 +1,7 @@
 // import * as https from 'https'
 import * as cheerio from 'cheerio'
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readFile, writeFile } from 'fs'
-import { httpGet } from './request'
+import { httpGet } from './http-request'
 
 const config = JSON.parse(readFileSync('config.json', 'utf8'))
 
