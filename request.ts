@@ -1,6 +1,6 @@
 import * as https from 'https'
 
-export function request(url: string, cookie: string = ''): Promise<string> {
+export function httpGet(url: string, cookie: string = ''): Promise<string> {
     return new Promise<string>((resolve, reject) => {
         https.get(url, { headers: {'cookie': cookie}}, response => {
             let data = ''

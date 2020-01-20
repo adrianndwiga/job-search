@@ -1,7 +1,7 @@
 // import * as https from 'https'
 import * as cheerio from 'cheerio'
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readFile, writeFile } from 'fs'
-import { request } from './request'
+import { httpGet } from './request'
 
 const config = JSON.parse(readFileSync('config.json', 'utf8'))
 
@@ -106,7 +106,7 @@ async function loadPage(jobSearch: {
         mkdirSync(folder)
     const downloadedFile = `${jobSearch.title}`;
     if (!existsSync(`${folder}/${downloadedFile}.json`)) {
-        const response = await request(jobSearch.url, jobSearch.cookie)
+        const response = await httpGet(jobSearch.url, jobSearch.cookie)
         const jobs = loadJobs(response, jobSearch)
         const js: Jobs = {jobSearch, jobs }
         const filePath = `${folder}/${downloadedFile}.json`
