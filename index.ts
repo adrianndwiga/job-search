@@ -1,6 +1,7 @@
-import * as https from 'https'
+// import * as https from 'https'
 import * as cheerio from 'cheerio'
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readFile, writeFile } from 'fs'
+import { request } from './request'
 
 const config = JSON.parse(readFileSync('config.json', 'utf8'))
 
@@ -32,24 +33,24 @@ interface Jobs {
     jobs: Job[]
 }
 
-function request(url: string, cookie: string = ''): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-        https.get(url, { headers: {'cookie': cookie}}, response => {
-            let data = ''
+// function request(url: string, cookie: string = ''): Promise<string> {
+//     return new Promise<string>((resolve, reject) => {
+//         https.get(url, { headers: {'cookie': cookie}}, response => {
+//             let data = ''
         
-            response.on('data', chunk => {
-                data += chunk
-            })
+//             response.on('data', chunk => {
+//                 data += chunk
+//             })
         
-            response.on('end', () => {
-                resolve(data)
-            })
-        }).on('error', err => {
-            console.log('error retrieving request')
-            reject(`Error: ${err.message}`)
-        })
-    })
-}
+//             response.on('end', () => {
+//                 resolve(data)
+//             })
+//         }).on('error', err => {
+//             console.log('error retrieving request')
+//             reject(`Error: ${err.message}`)
+//         })
+//     })
+// }
 
 function loadJobs(data: string, config: {
     url: string,
