@@ -37,15 +37,21 @@ class RequestHandler {
             return this.configRequest.headers
     }
 
-    send(): Promise<void> {
-        return new Promise<void>((resolve, request) => {
-            https.request({
+    send(data: string = ''): Promise<IncomingMessage> {
+        return new Promise<IncomingMessage>((resolve, request) => {
+            const req = https.request({
                 hostname: this.configRequest.host,
                 port: 443,
                 path: this.configRequest.path,
                 method: this.configRequest.method,
                 headers: this.requestHeaders,
+              }, (response: IncomingMessage) => {
+                  resolve(response)
               })
+              
+              if (data !== '')
+                req.write(data)
+              req.end()
         })
     }
 }
