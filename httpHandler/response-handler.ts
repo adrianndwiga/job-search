@@ -20,9 +20,18 @@ export class JSAuthResponseReader implements ResponseReader<JSAuthResponse> {
     }
 }
 
-export class JSJobSearchResponse {
+export interface JSJobSearchResponse {
     page: number
     pageCount: number
+}
+
+export class JSJobSearchResponseReader implements ResponseReader<JSJobSearchResponse> {
+    read(responseBody: string): JSJobSearchResponse {
+        return {
+            page: 0,
+            pageCount: 0
+        };
+    }
 }
 
 type Reader<T> = (response: IncomingMessage) => Promise<T>
