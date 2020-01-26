@@ -9,7 +9,7 @@ interface ConfigRequest {
     method: 'POST' | 'GET'
 }
 
-class RequestHandler {
+export class RequestHandler {
     private readonly requestHeaders: any;
 
     constructor(private configRequest: ConfigRequest) {
