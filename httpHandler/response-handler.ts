@@ -1,4 +1,5 @@
-import { IncomingMessage } from "http";
+import { IncomingMessage } from "http"
+import * as cheerio from 'cheerio'
 
 export interface ConfigResponse {
     
@@ -8,14 +9,33 @@ interface ResponseReader<T> {
     read(responseBody: string): T
 }
 
+export interface JSAuthResponseConfig {
+    shid: {
+        'css-selector': {
+            path: string,
+            '@shid': string
+        }
+    }
+}
+
 export interface JSAuthResponse {
     shid: string
 }
 
 export class JSAuthResponseReader implements ResponseReader<JSAuthResponse> {
+    /**
+     *
+     */
+    constructor(private configResponse: JSAuthResponseConfig) {
+        // super();
+        
+    }
+
     read(responseBody: string): JSAuthResponse {
+        const $ = cheerio.load(responseBody)
         return {
-            shid: ''
+            shid: $(this.configResponse.shid["css-selector"].path)
+                    .attr(this.configResponse.shid["css-selector"]["@shid"])
         }
     }
 }
@@ -27,10 +47,11 @@ export interface JSJobSearchResponse {
 
 export class JSJobSearchResponseReader implements ResponseReader<JSJobSearchResponse> {
     read(responseBody: string): JSJobSearchResponse {
+        const data = JSON.parse(responseBody)
         return {
-            page: 0,
-            pageCount: 0
-        };
+            page: data.page,
+            pageCount: data.pageCount
+        }
     }
 }
 
