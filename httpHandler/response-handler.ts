@@ -26,16 +26,15 @@ export class JSAuthResponseReader implements ResponseReader<JSAuthResponse> {
     /**
      *
      */
-    constructor(private configResponse: JSAuthResponseConfig) {
-        // super();
-        
-    }
+    constructor(private configResponse: JSAuthResponseConfig) { }
 
     read(responseBody: string): JSAuthResponse {
         const $ = cheerio.load(responseBody)
+        const path = this.configResponse.shid["css-selector"].path
+        const shid =  this.configResponse.shid["css-selector"]["@shid"]
         return {
-            shid: $(this.configResponse.shid["css-selector"].path)
-                    .attr(this.configResponse.shid["css-selector"]["@shid"])
+            shid: $(path)
+                    .attr(shid)
         }
     }
 }
