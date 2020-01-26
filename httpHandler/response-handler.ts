@@ -32,9 +32,9 @@ export class JSAuthResponseReader implements ResponseReader<JSAuthResponse> {
         const $ = cheerio.load(responseBody)
         const path = this.configResponse.shid["css-selector"].path
         const shid =  this.configResponse.shid["css-selector"]["@shid"]
+
         return {
-            shid: $(path)
-                    .attr(shid)
+            shid: $(path).attr(shid)
         }
     }
 }
