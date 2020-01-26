@@ -1,15 +1,25 @@
+import { readFileSync } from "fs"
+
 interface RequestConfig {
     host: string
     path: string
-    getHeaders(): object
 }
 
-interface AuthRequest extends RequestConfig {
-    headers: string
+export class AuthRequest implements RequestConfig {
+    constructor(headers: string) {
+        const headerFields = readFileSync(headers, 'utf8')
+        for(const field of headerFields.split('\n')) {
+            const values = field.split(': ')
+            this.headers[values[0]] = values[1]
+        }
+    }
+    host: string
+    path: string
+    readonly headers: object
     method: "POST"
 }
 
-interface JobSearchRequest extends RequestConfig {
-    headers: string
+export interface JobSearchRequest extends RequestConfig {
+    headers: object
     method: "POST"
 }
