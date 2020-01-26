@@ -4,9 +4,20 @@ export interface ConfigResponse {
     
 }
 
-export class JSAuthResponse {
-    shid: string
+interface ResponseReader<T> {
+    read(responseBody: string): T
+}
 
+export interface JSAuthResponse {
+    shid: string
+}
+
+export class JSAuthResponseReader implements ResponseReader<JSAuthResponse> {
+    read(responseBody: string): JSAuthResponse {
+        return {
+            shid: ''
+        }
+    }
 }
 
 export class JSJobSearchResponse {
