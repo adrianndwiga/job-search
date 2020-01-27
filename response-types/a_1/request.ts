@@ -1,6 +1,6 @@
 import { AuthRequestConfig, JobSearchRequestConfig } from "./request-config";
 import { AuthResponse, JobSearchResponse } from "./response";
-import { IncomingMessage } from "http";
+import { IncomingMessage, OutgoingHttpHeaders } from "http";
 import * as https from 'https'
 import { HttpsRequest } from "../types";
 import { resolve } from "dns";
@@ -10,11 +10,18 @@ export class AuthRequest {
     }
 }
 
-export class JobSearchRequest implements HttpsRequest<{page: number, shid: string}> {
+export class JobSearchRequest implements HttpsRequest<JobSearchRequestConfig, {page: number, shid: string}> {
 
-    request(options: https.RequestOptions): Promise<{page: number, shid: string}> {
+    request(options: JobSearchRequestConfig): Promise<{page: number, shid: string}> {
         return new Promise<{page: number, shid: string}>((resolve, reject) => {
-            baseRequest(options)
+            const requestOptions: https.RequestOptions = {
+                host: options.host,
+                path: options.path,
+                port: 443,
+                method: options.method,
+                headers: options.headers
+            }
+            baseRequest(requestOptions)
             .then(response => {
                 let chunk = ''
                 response.on('data', data => chunk += data)
@@ -25,7 +32,7 @@ export class JobSearchRequest implements HttpsRequest<{page: number, shid: strin
                     })
                 })
             })
-        });
+        })
     }
 
     constructor(

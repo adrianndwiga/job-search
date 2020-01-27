@@ -21,6 +21,5 @@ export interface AuthRequestConfig extends RequestConfig {
 }
 
 export interface JobSearchRequestConfig extends RequestConfig {
-    headers: object
-    // method: "POST"
+    headers: {}
 }
