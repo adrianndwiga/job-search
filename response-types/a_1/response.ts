@@ -1,5 +1,6 @@
 import { AuthResponseConfig } from "./response-config"
 import * as cheerio from 'cheerio'
+import { ResponseReader } from "../types"
 
 export interface AuthResponse {
     shid: string
