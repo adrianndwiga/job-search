@@ -4,11 +4,25 @@ import { IncomingMessage } from "http";
 import * as https from 'https'
 import { HttpsRequest } from "../types";
 import { unzip } from "zlib";
+import * as cheerio from "cheerio"
+import * as url from 'url'
+import * as querystring from 'querystring'
 
 export type LoadRequestHeaders = (header: string) => {}
-export type GetAuthResponseFromBody = (content: string) => AuthResponse
+export type GetAuthResponseFromBody = (options: {content: string, sessionIdentifier: {cssSelector: string, attributeName: string}, host: string}) => AuthResponse
 
 export class AuthRequest implements HttpsRequest<AuthRequestConfig, AuthResponse> {
+    private getAuthResponseFromBody(content: string, host: string): { shid } {
+        const $ = cheerio.load(content)
+        const path = $(this.sessionIdentifier.cssSelector).attr(this.sessionIdentifier.attributeName)
+        const query = url.parse(`${host}/${path}`).query
+        const shid = querystring.parse(query)['shid'] as string
+    
+        return {
+            shid
+        }
+    }
+
     request(options: AuthRequestConfig): Promise<AuthResponse> {
         return new Promise<AuthResponse>(async (resolve, reject) => {
             const response = await baseRequest({
@@ -26,14 +40,20 @@ export class AuthRequest implements HttpsRequest<AuthRequestConfig, AuthResponse
 
             response.on('end', () => {
                 unzip(returnedResponse, (err, buffer) => {
-                    resolve(this.getAuthResponseFromBody(buffer.toString()))
+                    resolve(this.getAuthResponseFromBody(buffer.toString(), options.host))
                 })
             })
 
             response.on('error', error => reject(error))
         })
     }
-    constructor(private readonly loadHeaders: LoadRequestHeaders, private readonly requestData: string, private readonly getAuthResponseFromBody: GetAuthResponseFromBody) {
+    constructor(
+        private readonly loadHeaders: LoadRequestHeaders, 
+        private readonly requestData: string, 
+        private readonly sessionIdentifier: {
+             cssSelector: string, 
+             attributeName: string 
+            }) {
     }
 }
 

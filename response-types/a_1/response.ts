@@ -23,6 +23,7 @@ export class AuthResponseReader implements ResponseReader<AuthResponse> {
 export interface JobSearchResponse {
     page: number
     pageCount: number
+    items?: any
 }
 
 export class JobSearchResponseReader implements ResponseReader<JobSearchResponse> {
