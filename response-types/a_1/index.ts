@@ -1,14 +1,7 @@
 import { AuthRequestConfig, JobSearchRequestConfig } from "./request-config"
 import { readFileSync, writeFileSync } from "fs"
 import { AuthRequest, JobSearchRequest } from "./request"
-
-interface Job {
-    id: string
-    title: string
-    rate: string
-    location: string
-    jobUrl: string
-}
+import { Job } from "../types"
 
 export class A_1 {
     /**

@@ -69,7 +69,7 @@ export class JobSearchRequest implements HttpsRequest<JobSearchRequestConfig, Jo
                 headers: options.headers
             }
             const response = await baseRequest(requestOptions, JSON.stringify({
-                page: 1,
+                page: this.jobSearchResponse.page,
                 shid: this.authResponse.shid
             }))
             let chunk = ''
