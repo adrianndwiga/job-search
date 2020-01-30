@@ -47,16 +47,6 @@ export class A_1 {
     
         const jobSearchResponse = await jobSearchRequest.request(jobSearchRequestConfig)
         const jobSearchItemKey = this.config.jobSearchItemKey
-    
-        // jobs = jobSearchResponse.items.map(i => {
-        //     return {
-        //         id: i[jobSearchItemKey.identifier],
-        //         title: i[jobSearchItemKey.title],
-        //         salary: i[jobSearchItemKey.salary],
-        //         location: i[jobSearchItemKey.location],
-        //         jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
-        //     }
-        // })
         jobs = this.getJobDetails(jobSearchItemKey, jobSearchResponse)
 
         let jobSearchResponses = []
@@ -66,16 +56,6 @@ export class A_1 {
                 const jobSearchRequest = new JobSearchRequest(jobSearchRequestConfig, authResult, {page: start, pageCount: 1})
                 const response = await jobSearchRequest.request(jobSearchRequestConfig)
                 jobSearchResponses.push(await jobSearchRequest.request(jobSearchRequestConfig))
-    
-                // jobs = jobs.concat(response.items.map(i => {
-                //     return {
-                //         id: i[jobSearchItemKey.identifier],
-                //         title: i[jobSearchItemKey.title],
-                //         salary: i[jobSearchItemKey.salary],
-                //         location: i[jobSearchItemKey.location],
-                //         jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
-                //     }
-                // }))
                 jobs = jobs.concat(this.getJobDetails(jobSearchItemKey, response))
 
                 
