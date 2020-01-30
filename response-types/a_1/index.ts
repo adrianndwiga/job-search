@@ -4,9 +4,6 @@ import { AuthRequest, JobSearchRequest } from "./request"
 import { Job } from "../types"
 
 export class A_1 {
-    /**
-     *
-     */
     private readonly authRequestConfig: AuthRequestConfig
 
     private loadHeaders(file: string): {} {
