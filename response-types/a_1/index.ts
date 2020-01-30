@@ -2,6 +2,7 @@ import { AuthRequestConfig, JobSearchRequestConfig } from "./request-config"
 import { readFileSync, writeFileSync } from "fs"
 import { AuthRequest, JobSearchRequest } from "./request"
 import { Job } from "../types"
+import { JobSearchResponse } from "./response"
 
 export class A_1 {
     private readonly authRequestConfig: AuthRequestConfig
@@ -25,6 +26,18 @@ export class A_1 {
         this.authRequest = new AuthRequest(this.loadHeaders, config.postData, this.config.sessionIdentifier)
     }
 
+    private getJobDetails(jobSearchItemKey: any, jobSearchResponse: JobSearchResponse): Job[] {
+        return jobSearchResponse.items.map(i => {
+            return {
+                id: i[jobSearchItemKey.identifier],
+                title: i[jobSearchItemKey.title],
+                salary: i[jobSearchItemKey.salary],
+                location: i[jobSearchItemKey.location],
+                jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
+            }
+        })
+    }
+
     async run() {
         let jobs: Job[] = []
     
@@ -35,15 +48,17 @@ export class A_1 {
         const jobSearchResponse = await jobSearchRequest.request(jobSearchRequestConfig)
         const jobSearchItemKey = this.config.jobSearchItemKey
     
-        jobs = jobSearchResponse.items.map(i => {
-            return {
-                id: i[jobSearchItemKey.identifier],
-                title: i[jobSearchItemKey.title],
-                salary: i[jobSearchItemKey.salary],
-                location: i[jobSearchItemKey.location],
-                jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
-            }
-        })
+        // jobs = jobSearchResponse.items.map(i => {
+        //     return {
+        //         id: i[jobSearchItemKey.identifier],
+        //         title: i[jobSearchItemKey.title],
+        //         salary: i[jobSearchItemKey.salary],
+        //         location: i[jobSearchItemKey.location],
+        //         jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
+        //     }
+        // })
+        jobs = this.getJobDetails(jobSearchItemKey, jobSearchResponse)
+
         let jobSearchResponses = []
     
         if (jobSearchResponse.pageCount > jobSearchResponse.page) {
@@ -52,15 +67,18 @@ export class A_1 {
                 const response = await jobSearchRequest.request(jobSearchRequestConfig)
                 jobSearchResponses.push(await jobSearchRequest.request(jobSearchRequestConfig))
     
-                jobs = jobs.concat(response.items.map(i => {
-                    return {
-                        id: i[jobSearchItemKey.identifier],
-                        title: i[jobSearchItemKey.title],
-                        salary: i[jobSearchItemKey.salary],
-                        location: i[jobSearchItemKey.location],
-                        jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
-                    }
-                }))
+                // jobs = jobs.concat(response.items.map(i => {
+                //     return {
+                //         id: i[jobSearchItemKey.identifier],
+                //         title: i[jobSearchItemKey.title],
+                //         salary: i[jobSearchItemKey.salary],
+                //         location: i[jobSearchItemKey.location],
+                //         jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
+                //     }
+                // }))
+                jobs = jobs.concat(this.getJobDetails(jobSearchItemKey, response))
+
+                
             }
         }
         writeFileSync(this.config.outputFile, JSON.stringify(jobs, null, 4), 'utf8')
