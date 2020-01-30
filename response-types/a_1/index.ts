@@ -26,7 +26,7 @@ export class A_1 {
         this.authRequest = new AuthRequest(this.loadHeaders, config.postData, this.config.sessionIdentifier)
     }
 
-    private getJobDetails(jobSearchItemKey: any, jobSearchResponse: JobSearchResponse): Job[] {
+    private getJobSearchItem(jobSearchItemKey: any, jobSearchResponse: JobSearchResponse): Job[] {
         return jobSearchResponse.items.map(i => {
             return {
                 id: i[jobSearchItemKey.identifier],
@@ -47,7 +47,7 @@ export class A_1 {
     
         const jobSearchResponse = await jobSearchRequest.request(jobSearchRequestConfig)
         const jobSearchItemKey = this.config.jobSearchItemKey
-        jobs = this.getJobDetails(jobSearchItemKey, jobSearchResponse)
+        jobs = this.getJobSearchItem(jobSearchItemKey, jobSearchResponse)
 
         let jobSearchResponses = []
     
@@ -56,7 +56,7 @@ export class A_1 {
                 const jobSearchRequest = new JobSearchRequest(jobSearchRequestConfig, authResult, {page: start, pageCount: 1})
                 const response = await jobSearchRequest.request(jobSearchRequestConfig)
                 jobSearchResponses.push(await jobSearchRequest.request(jobSearchRequestConfig))
-                jobs = jobs.concat(this.getJobDetails(jobSearchItemKey, response))
+                jobs = jobs.concat(this.getJobSearchItem(jobSearchItemKey, response))
 
                 
             }
