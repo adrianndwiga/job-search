@@ -1,6 +1,5 @@
 import { AuthRequestConfig, JobSearchRequestConfig } from "./request-config";
 import { AuthResponse, JobSearchResponse } from "./response";
-import { IncomingMessage } from "http";
 import * as https from 'https'
 import { HttpsRequest } from "../types";
 import { unzip } from "zlib";
