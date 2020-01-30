@@ -7,6 +7,7 @@ import { unzip } from "zlib";
 import * as cheerio from "cheerio"
 import * as url from 'url'
 import * as querystring from 'querystring'
+import { baseRequest } from "../../request";
 
 export type LoadRequestHeaders = (header: string) => {}
 export type GetAuthResponseFromBody = (options: {content: string, sessionIdentifier: {cssSelector: string, attributeName: string}, host: string}) => AuthResponse
@@ -86,15 +87,4 @@ export class JobSearchRequest implements HttpsRequest<JobSearchRequestConfig, Jo
         private authResponse: AuthResponse,
         private jobSearchResponse: JobSearchResponse) {
     }
-}
-
-export const baseRequest = (options: https.RequestOptions, data = undefined): Promise<IncomingMessage> => {
-    return new Promise<IncomingMessage>((resolve, reject) => {
-        const request = https.request(options, response => {
-            resolve(response)
-        })
-        if (data)
-            request.write(data);
-        request.end()
-    })
 }
