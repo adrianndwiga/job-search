@@ -1,6 +1,5 @@
-import { AuthRequestConfig, JobSearchRequestConfig } from "./request-config";
-import { AuthResponse, JobSearchResponse } from "./response";
-import * as https from 'https'
+import { AuthRequestConfig } from "./request-config";
+import { AuthResponse } from "./response";
 import { HttpsRequest } from "../types";
 import { unzip } from "zlib";
 import * as cheerio from "cheerio"
@@ -16,8 +15,8 @@ export class AuthRequest implements HttpsRequest<AuthRequestConfig, AuthResponse
         const $ = cheerio.load(content)
         const path = $(this.sessionIdentifier.cssSelector).attr(this.sessionIdentifier.attributeName)
         const query = url.parse(`${host}/${path}`).query
-        const shid = querystring.parse(query as string)['shid'] as string
-    
+        const shid = querystring.parse(query as string).shid as string
+
         return {
             shid
         }
@@ -48,42 +47,13 @@ export class AuthRequest implements HttpsRequest<AuthRequestConfig, AuthResponse
         })
     }
     constructor(
-        private readonly loadHeaders: LoadRequestHeaders, 
-        private readonly requestData: string, 
+        private readonly loadHeaders: LoadRequestHeaders,
+        private readonly requestData: string,
         private readonly sessionIdentifier: {
-             cssSelector: string, 
-             attributeName: string 
+             cssSelector: string,
+             attributeName: string
             }) {
     }
 }
 
-export class JobSearchRequest implements HttpsRequest<JobSearchRequestConfig, JobSearchResponse> {
 
-    request(options: JobSearchRequestConfig): Promise<JobSearchResponse> {
-        return new Promise<JobSearchResponse>(async (resolve, reject) => {
-            const requestOptions: https.RequestOptions = {
-                host: options.host,
-                path: options.path,
-                port: 443,
-                method: options.method,
-                headers: options.headers
-            }
-            const response = await baseRequest(requestOptions, JSON.stringify({
-                page: this.jobSearchResponse.page,
-                shid: this.authResponse.shid
-            }))
-            let chunk = ''
-            response.on('data', data => chunk += data)
-            response.on('end', () => {
-                const responseData = JSON.parse(chunk) as { page: number, pageCount: number }
-                resolve(responseData)
-            })
-        })
-    }
-
-    constructor(
-        private config: JobSearchRequestConfig,
-        private authResponse: AuthResponse,
-        private jobSearchResponse: JobSearchResponse) {
-    }
-}

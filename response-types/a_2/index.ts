@@ -35,8 +35,8 @@ export class A_2 {
 
         const results = $(this.config.jobSearchResults)
         const key = this.config.jobSearchItemKey
-        let jobs: Job[] = []
-        for (let item of results as any) {
+        const jobs: Job[] = []
+        for (const item of results as any) {
 
             jobs.push(
                 {

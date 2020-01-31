@@ -1,6 +1,7 @@
 import { AuthRequestConfig, JobSearchRequestConfig } from "./request-config"
 import { readFileSync, writeFileSync } from "fs"
-import { AuthRequest, JobSearchRequest } from "./request"
+import { AuthRequest } from "./request"
+import { JobSearchRequest } from "./JobSearchRequest"
 import { Job } from "../types"
 import { JobSearchResponse } from "./response"
 
