@@ -5,8 +5,7 @@ import { JobSearchRequest } from "./JobSearchRequest"
 import { Job } from "../types"
 import { JobSearchResponse } from "./response"
 
-// tslint:disable-next-line: class-name
-export class A_1 {
+export class A1 {
     private readonly authRequestConfig: AuthRequestConfig
 
     private loadHeaders(file: string): {} {

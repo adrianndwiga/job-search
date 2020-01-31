@@ -26,7 +26,7 @@ export type Config = {
     }
 }
 
-export class A_2 {
+export class A2 {
     constructor(private readonly config: Config) {
     }
 
