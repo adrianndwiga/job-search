@@ -1,6 +1,4 @@
-export interface ResponseConfig {}
-
-export interface AuthResponseConfig extends ResponseConfig {
+export interface AuthResponseConfig {
     shid: {
         'css-selector': {
             path: string,
@@ -9,7 +7,7 @@ export interface AuthResponseConfig extends ResponseConfig {
     }
 }
 
-export interface JobSearchResponseConfig extends ResponseConfig {
+export interface JobSearchResponseConfig {
     page: string
     pageCount: string
 }
