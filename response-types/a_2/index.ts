@@ -10,11 +10,18 @@ export type Config = {
     },
     jobSearchResults: string
     jobSearchItemKey: {
-        identifier: string
+        identifier: {
+            cssSelector: string
+            attributeName: string
+        }
         title: string
         salary: string
         location: string
         company: string
+        jobUrl: {
+            cssSelector: string
+            attributeName: string
+        }
     }
 }
 
@@ -30,10 +37,12 @@ export class A_2 {
         for (let item of results) {
             console.log(
                 {
-                    title: $(this.config.jobSearchItemKey.title, item).text(),
+                    id: $(item).attr(this.config.jobSearchItemKey.identifier.attributeName),
+                    title: $(this.config.jobSearchItemKey.title, item).html(),
                     location: $(this.config.jobSearchItemKey.location, item).text().replace('\n', '').trim(),
                     salary: $(this.config.jobSearchItemKey.salary, item).text(),
-                    company: $(this.config.jobSearchItemKey.company, item).text()
+                    company: $(this.config.jobSearchItemKey.company, item).text(),
+                    jobUrl: $(this.config.jobSearchItemKey.jobUrl.cssSelector, item).attr(this.config.jobSearchItemKey.jobUrl.attributeName)
                 })
         }
         return []
