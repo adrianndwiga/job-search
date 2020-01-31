@@ -15,7 +15,7 @@ export class AuthResponseReader implements ResponseReader<AuthResponse> {
         const shid =  this.configResponse.shid["css-selector"]["@shid"]
 
         return {
-            shid: $(path).attr(shid)
+            shid: $(path).attr(shid) as string
         }
     }
 }

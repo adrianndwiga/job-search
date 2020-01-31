@@ -20,12 +20,12 @@ export function httpGet(url: string, cookie: string = ''): Promise<string> {
     })
 }
 
-export const baseRequest = (options: https.RequestOptions, data = undefined): Promise<IncomingMessage> => {
+export const baseRequest = (options: https.RequestOptions, data = ''): Promise<IncomingMessage> => {
     return new Promise<IncomingMessage>((resolve, reject) => {
         const request = https.request(options, response => {
             resolve(response)
         })
-        if (data)
+        if (data !== '')
             request.write(data);
         request.end()
     })

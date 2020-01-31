@@ -12,11 +12,11 @@ export type LoadRequestHeaders = (header: string) => {}
 export type GetAuthResponseFromBody = (options: {content: string, sessionIdentifier: {cssSelector: string, attributeName: string}, host: string}) => AuthResponse
 
 export class AuthRequest implements HttpsRequest<AuthRequestConfig, AuthResponse> {
-    private getAuthResponseFromBody(content: string, host: string): { shid } {
+    private getAuthResponseFromBody(content: string, host: string): { shid: string } {
         const $ = cheerio.load(content)
         const path = $(this.sessionIdentifier.cssSelector).attr(this.sessionIdentifier.attributeName)
         const query = url.parse(`${host}/${path}`).query
-        const shid = querystring.parse(query)['shid'] as string
+        const shid = querystring.parse(query as string)['shid'] as string
     
         return {
             shid

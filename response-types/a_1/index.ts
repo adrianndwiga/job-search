@@ -8,7 +8,7 @@ export class A_1 {
     private readonly authRequestConfig: AuthRequestConfig
 
     private loadHeaders(file: string): {} {
-        let headers = {}
+        let headers: any = {}
         const lines = readFileSync(file, 'utf8').split('\n')
     
         for(const line of lines) {
@@ -27,7 +27,7 @@ export class A_1 {
     }
 
     private getJobSearchItem(jobSearchItemKey: any, jobSearchResponse: JobSearchResponse): Job[] {
-        return jobSearchResponse.items.map(i => {
+        return jobSearchResponse.items.map((i: any) => {
             return {
                 id: i[jobSearchItemKey.identifier],
                 title: i[jobSearchItemKey.title],

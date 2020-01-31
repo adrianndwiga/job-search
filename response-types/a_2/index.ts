@@ -40,12 +40,12 @@ export class A_2 {
 
             jobs.push(
                 {
-                    id: $(item).attr(key.identifier.attributeName),
-                    title: $(key.title, item).html(),
+                    id: $(item).attr(key.identifier.attributeName) as string,
+                    title: $(key.title, item).html() as string,
                     location: $(key.location, item).text().replace('\n', '').trim(),
                     salary: $(key.salary, item).text(),
                     company: $(key.company, item).text(),
-                    jobUrl: $(key.jobUrl.cssSelector, item).attr(key.jobUrl.attributeName)
+                    jobUrl: $(key.jobUrl.cssSelector, item).attr(key.jobUrl.attributeName) as string
                 })
         }
         return jobs

@@ -11,7 +11,7 @@ export interface Job {
     title: string
     salary: string
     location: string
-    jobUrl: string,
+    jobUrl: string
     company?: string
 }
 
