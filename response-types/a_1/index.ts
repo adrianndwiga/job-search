@@ -34,7 +34,7 @@ export class A_1 {
                 title: i[jobSearchItemKey.title],
                 salary: i[jobSearchItemKey.salary],
                 location: i[jobSearchItemKey.location],
-                jobUrl: `${this.config["jobUrl"]}${i[jobSearchItemKey.identifier]}`
+                jobUrl: `${this.config.jobUrl}${i[jobSearchItemKey.identifier]}`
             }
         })
     }
