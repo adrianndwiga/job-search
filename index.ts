@@ -1,3 +1,3 @@
-import * as _ from './response-types/index'
+import { REQUESTS } from './response-types/index'
 
-export default _
+export default REQUESTS
