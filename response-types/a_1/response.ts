@@ -25,13 +25,3 @@ export interface JobSearchResponse {
     pageCount: number
     items?: any
 }
-
-export class JobSearchResponseReader implements ResponseReader<JobSearchResponse> {
-    read(responseBody: string): JobSearchResponse {
-        const data = JSON.parse(responseBody)
-        return {
-            page: data.page,
-            pageCount: data.pageCount
-        }
-    }
-}
