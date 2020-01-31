@@ -1,8 +1,10 @@
 import { baseRequest } from "../../request"
 import * as cheerio from 'cheerio'
 import { Job } from "../types"
+import { writeFileSync } from "fs"
 
 export type Config = {
+    outputFile: string
     jobSearchRequestConfig: {
         host: string
         path: string
@@ -11,7 +13,6 @@ export type Config = {
     jobSearchResults: string
     jobSearchItemKey: {
         identifier: {
-            cssSelector: string
             attributeName: string
         }
         title: string
@@ -27,25 +28,38 @@ export type Config = {
 
 export class A_2 {
     constructor(private readonly config: Config) {
-        console.log(config)
+        // console.log(config)
     }
 
     private getJobs(content: string): Job[] {
         const $ = cheerio.load(content)
 
         const results = $(this.config.jobSearchResults)
-        for (let item of results) {
-            console.log(
+        const key = this.config.jobSearchItemKey
+        let jobs: Job[] = []
+        for (let item of results as any) {
+
+            jobs.push(
                 {
-                    id: $(item).attr(this.config.jobSearchItemKey.identifier.attributeName),
-                    title: $(this.config.jobSearchItemKey.title, item).html(),
-                    location: $(this.config.jobSearchItemKey.location, item).text().replace('\n', '').trim(),
-                    salary: $(this.config.jobSearchItemKey.salary, item).text(),
-                    company: $(this.config.jobSearchItemKey.company, item).text(),
-                    jobUrl: $(this.config.jobSearchItemKey.jobUrl.cssSelector, item).attr(this.config.jobSearchItemKey.jobUrl.attributeName)
+                    id: $(item).attr(key.identifier.attributeName),
+                    title: $(key.title, item).html(),
+                    location: $(key.location, item).text().replace('\n', '').trim(),
+                    salary: $(key.salary, item).text(),
+                    company: $(key.company, item).text(),
+                    jobUrl: $(key.jobUrl.cssSelector, item).attr(key.jobUrl.attributeName)
                 })
         }
-        return []
+        return jobs
+        // return (results as any).map(item => {
+        //     return {
+        //         id: $(item).attr(key.identifier.attributeName),
+        //         title: $(key.title, item).html(),
+        //         location: $(key.location, item).text().replace('\n', '').trim(),
+        //         salary: $(key.salary, item).text(),
+        //         company: $(key.company, item).text(),
+        //         jobUrl: $(key.jobUrl.cssSelector, item).attr(key.jobUrl.attributeName)
+        //     }
+        // })
     }
 
     run() {
@@ -56,8 +70,13 @@ export class A_2 {
         }).then(response => {
             let str = ''
             response.on('data', data => str += data)
-            response.on('end', () => this.getJobs(str))
+            response.on('end', () => writeFile(this.config.outputFile, this.getJobs(str)))
         })
     }
 
+}
+
+export function writeFile(outputFile: string, jobs: Job[]): void {
+    // console.log(outputFile, jobs)
+    writeFileSync(outputFile, JSON.stringify(jobs, null, 4), 'utf8')
 }
