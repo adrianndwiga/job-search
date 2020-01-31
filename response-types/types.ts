@@ -22,9 +22,9 @@ type SalaryGrouping = {
 
 export class JobsGroupedBySalary {
     salaries: SalaryGrouping[] = []
-    
+
     constructor(jobs: Job[]) {
-        for(let job of jobs) {
+        for(const job of jobs) {
             const salary = this.salaries
                 .find(s => s.key === job.salary.replace(/ /g, '').toLowerCase())
             if (salary) {
@@ -36,6 +36,5 @@ export class JobsGroupedBySalary {
                 })
             }
         }
-        
     }
 }
