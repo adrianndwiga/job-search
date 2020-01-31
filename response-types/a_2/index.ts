@@ -28,7 +28,6 @@ export type Config = {
 
 export class A_2 {
     constructor(private readonly config: Config) {
-        // console.log(config)
     }
 
     private getJobs(content: string): Job[] {
@@ -50,16 +49,6 @@ export class A_2 {
                 })
         }
         return jobs
-        // return (results as any).map(item => {
-        //     return {
-        //         id: $(item).attr(key.identifier.attributeName),
-        //         title: $(key.title, item).html(),
-        //         location: $(key.location, item).text().replace('\n', '').trim(),
-        //         salary: $(key.salary, item).text(),
-        //         company: $(key.company, item).text(),
-        //         jobUrl: $(key.jobUrl.cssSelector, item).attr(key.jobUrl.attributeName)
-        //     }
-        // })
     }
 
     run() {
@@ -77,6 +66,5 @@ export class A_2 {
 }
 
 export function writeFile(outputFile: string, jobs: Job[]): void {
-    // console.log(outputFile, jobs)
     writeFileSync(outputFile, JSON.stringify(jobs, null, 4), 'utf8')
 }
