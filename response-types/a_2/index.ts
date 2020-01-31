@@ -52,10 +52,11 @@ export class A_2 {
     }
 
     run() {
+        const requestConfig = this.config.jobSearchRequestConfig
         baseRequest({
-            host: this.config.jobSearchRequestConfig.host,
-            path: this.config.jobSearchRequestConfig.path,
-            method: this.config.jobSearchRequestConfig.method
+            host: requestConfig.host,
+            path: requestConfig.path,
+            method: requestConfig.method
         }).then(response => {
             let str = ''
             response.on('data', data => str += data)
