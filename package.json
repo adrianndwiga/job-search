@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/cheerio": "^0.22.16",
     "@types/node": "^12.12.17",
     "typescript": "^3.7.3"
   },
