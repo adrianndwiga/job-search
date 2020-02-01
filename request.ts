@@ -7,7 +7,7 @@ export const baseRequest = (options: https.RequestOptions, data = ''): Promise<I
             resolve(response)
         })
         if (data !== '')
-            request.write(data);
+            request.write(data)
         request.end()
     })
 }

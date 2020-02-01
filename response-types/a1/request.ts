@@ -1,11 +1,11 @@
-import { AuthRequestConfig } from "./request-config";
-import { AuthResponse } from "./response";
-import { HttpsRequest } from "../types";
-import { unzip } from "zlib";
+import { AuthRequestConfig } from "./request-config"
+import { AuthResponse } from "./response"
+import { HttpsRequest } from "../types"
+import { unzip } from "zlib"
 import * as cheerio from "cheerio"
 import * as url from 'url'
 import * as querystring from 'querystring'
-import { baseRequest } from "../../request";
+import { baseRequest } from "../../request"
 
 export type LoadRequestHeaders = (header: string) => {}
 export type GetAuthResponseFromBody = (options: {content: string, sessionIdentifier: {cssSelector: string, attributeName: string}, host: string}) => AuthResponse
