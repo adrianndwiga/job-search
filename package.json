@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run lint && tsc",
+    "lint": "tslint -c tslint.json './**/*.ts'",
     "start": "npm run build && node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
