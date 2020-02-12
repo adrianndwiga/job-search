@@ -14,27 +14,3 @@ export interface Job {
     jobUrl: string
     company?: string
 }
-
-type SalaryGrouping = {
-    key: string,
-    Jobs: Job[]
-}
-
-export class JobsGroupedBySalary {
-    salaries: SalaryGrouping[] = []
-
-    constructor(jobs: Job[]) {
-        for(const job of jobs) {
-            const salary = this.salaries
-                .find(s => s.key === job.salary.replace(/ /g, '').toLowerCase())
-            if (salary) {
-                salary.Jobs = salary.Jobs.concat(job)
-            } else {
-                this.salaries.push({
-                    key: job.salary.replace(/ /g, '').toLowerCase(),
-                    Jobs: [job]
-                })
-            }
-        }
-    }
-}
