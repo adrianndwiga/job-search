@@ -42,10 +42,14 @@ export class A2 {
                 {
                     id: $(item).attr(key.identifier.attributeName) as string,
                     title: $(key.title, item).html() as string,
-                    location: $(key.location, item).text().replace('\n', '').trim(),
+                    location: $(key.location, item)
+                                    .text()
+                                    .replace('\n', '')
+                                    .trim(),
                     salary: $(key.salary, item).text(),
                     company: $(key.company, item).text(),
-                    jobUrl: $(key.jobUrl.cssSelector, item).attr(key.jobUrl.attributeName) as string
+                    jobUrl: $(key.jobUrl.cssSelector, item)
+                                    .attr(key.jobUrl.attributeName) as string
                 })
         }
         return jobs
@@ -60,7 +64,10 @@ export class A2 {
         }).then(response => {
             let str = ''
             response.on('data', data => str += data)
-            response.on('end', () => writeFile(this.config.outputFile, this.getJobs(str)))
+            response.on('end', () => writeFile(
+                                        this.config.outputFile,
+                                        this.getJobs(str))
+                                        )
         })
     }
 
