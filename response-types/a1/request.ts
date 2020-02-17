@@ -8,12 +8,25 @@ import * as querystring from 'querystring'
 import { baseRequest } from "../../request"
 
 export type LoadRequestHeaders = (header: string) => {}
-export type GetAuthResponseFromBody = (options: {content: string, sessionIdentifier: {cssSelector: string, attributeName: string}, host: string}) => AuthResponse
+export type GetAuthResponseFromBody =
+                (options: {
+                    content: string,
+                    sessionIdentifier: {
+                        cssSelector: string,
+                        attributeName: string},
+                    host: string}) => AuthResponse
 
-export class AuthRequest implements HttpsRequest<AuthRequestConfig, AuthResponse> {
-    private getAuthResponseFromBody(content: string, host: string): { shid: string } {
+export class AuthRequest implements
+                            HttpsRequest<AuthRequestConfig, AuthResponse> {
+
+    private getAuthResponseFromBody(
+        content: string,
+        host: string): { shid: string } {
+
         const $ = cheerio.load(content)
-        const path = $(this.sessionIdentifier.cssSelector).attr(this.sessionIdentifier.attributeName)
+        const path = $(this.sessionIdentifier.cssSelector)
+                            .attr(this.sessionIdentifier.attributeName)
+
         const query = url.parse(`${host}/${path}`).query
         const shid = querystring.parse(query as string).shid as string
 
@@ -39,7 +52,10 @@ export class AuthRequest implements HttpsRequest<AuthRequestConfig, AuthResponse
 
             response.on('end', () => {
                 unzip(returnedResponse, (err, buffer) => {
-                    resolve(this.getAuthResponseFromBody(buffer.toString(), options.host))
+                    resolve(
+                        this.getAuthResponseFromBody(
+                            buffer.toString(),
+                            options.host))
                 })
             })
 
