@@ -4,7 +4,9 @@ import { HttpsRequest } from "../types"
 import { baseRequest } from "../../request"
 import * as https from 'https'
 
-export class JobSearchRequest implements HttpsRequest<JobSearchRequestConfig, JobSearchResponse> {
+export class JobSearchRequest implements
+                    HttpsRequest<JobSearchRequestConfig, JobSearchResponse> {
+
     request(options: JobSearchRequestConfig): Promise<JobSearchResponse> {
         return new Promise<JobSearchResponse>(async (resolve, reject) => {
             const requestOptions: https.RequestOptions = {
@@ -29,6 +31,10 @@ export class JobSearchRequest implements HttpsRequest<JobSearchRequestConfig, Jo
             })
         })
     }
-    constructor(private config: JobSearchRequestConfig, private authResponse: AuthResponse, private jobSearchResponse: JobSearchResponse) {
+
+    constructor(
+        private config: JobSearchRequestConfig,
+        private authResponse: AuthResponse,
+        private jobSearchResponse: JobSearchResponse) {
     }
 }
