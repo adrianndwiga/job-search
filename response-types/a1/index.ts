@@ -24,10 +24,16 @@ export class A1 {
 
     constructor(private readonly config: any) {
         this.authRequestConfig = config.authRequestConfig as AuthRequestConfig
-        this.authRequest = new AuthRequest(this.loadHeaders, config.postData, this.config.sessionIdentifier)
+        this.authRequest = new AuthRequest(
+            this.loadHeaders,
+            config.postData,
+            this.config.sessionIdentifier)
     }
 
-    private getJobSearchItem(jobSearchItemKey: any, jobSearchResponse: JobSearchResponse): Job[] {
+    private getJobSearchItem(
+        jobSearchItemKey: any,
+        jobSearchResponse: JobSearchResponse): Job[] {
+
         return jobSearchResponse.items.map((i: any) => {
             return {
                 id: i[jobSearchItemKey.identifier],
@@ -42,22 +48,45 @@ export class A1 {
     async run() {
         let jobs: Job[] = []
 
-        const authResult = await this.authRequest.request(this.authRequestConfig)
-        const jobSearchRequestConfig = this.config.jobSearchRequestConfig as JobSearchRequestConfig
-        const jobSearchRequest = new JobSearchRequest(jobSearchRequestConfig, authResult, {page: 1, pageCount: 1})
+        const authResult = await this.authRequest
+                                    .request(this.authRequestConfig)
 
-        const jobSearchResponse = await jobSearchRequest.request(jobSearchRequestConfig)
+        const jobSearchRequestConfig = this.config
+                            .jobSearchRequestConfig as JobSearchRequestConfig
+        const jobSearchRequest = new JobSearchRequest(
+                                    jobSearchRequestConfig,
+                                    authResult,
+                                    {
+                                        page: 1,
+                                        pageCount: 1
+                                    })
+
+        const jobSearchResponse = await jobSearchRequest
+                                .request(jobSearchRequestConfig)
+
         const jobSearchItemKey = this.config.jobSearchItemKey
+
         jobs = this.getJobSearchItem(jobSearchItemKey, jobSearchResponse)
 
         const jobSearchResponses = []
 
         if (jobSearchResponse.pageCount > jobSearchResponse.page) {
-            for(let start = jobSearchResponse.page + 1; start <= jobSearchResponse.pageCount; start++) {
-                const request = new JobSearchRequest(jobSearchRequestConfig, authResult, {page: start, pageCount: 1})
+            for(let start = jobSearchResponse.page + 1;
+                start <= jobSearchResponse.pageCount;
+                start++) {
+                const request = new JobSearchRequest(
+                    jobSearchRequestConfig,
+                    authResult,
+                    {
+                        page: start,
+                        pageCount: 1
+                    })
                 const response = await request.request(jobSearchRequestConfig)
-                jobSearchResponses.push(await request.request(jobSearchRequestConfig))
-                jobs = jobs.concat(this.getJobSearchItem(jobSearchItemKey, response))
+                jobSearchResponses
+                        .push(await request.request(jobSearchRequestConfig))
+
+                const item = this.getJobSearchItem(jobSearchItemKey, response)
+                jobs = jobs.concat(item)
             }
         }
         writeFileSync(this.config.outputFile, JSON.stringify(jobs, null, 4), 'utf8')
