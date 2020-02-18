@@ -7,7 +7,8 @@
     "build": "npm run lint && tsc",
     "lint": "tslint -c tslint.json './**/*.ts'",
     "start": "npm run build && node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha './{,!(node_modules)/**}/*-tests.js'",
+    "lint:build:test": "npm run lint && npm run build && npm test"
   },
   "author": "",
   "license": "ISC",
