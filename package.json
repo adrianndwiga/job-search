@@ -13,7 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "@types/cheerio": "^0.22.16",
+    "@types/mocha": "^7.0.1",
     "@types/node": "^12.12.17",
+    "mocha": "^7.0.1",
     "tslint": "^6.0.0",
     "typescript": "^3.7.3"
   },
